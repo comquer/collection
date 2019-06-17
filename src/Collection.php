@@ -2,9 +2,7 @@
 
 namespace Comquer\Collection;
 
-use Countable;
-
-abstract class Collection extends IterableCollection implements Countable
+abstract class Collection extends IterableAndCountable
 {
     private $type;
 
@@ -30,7 +28,7 @@ abstract class Collection extends IterableCollection implements Countable
             $this->uniqueIndex->validate($element, $this->getElements());
         }
 
-        parent::addElement($element);
+        $this->addElement($element);
 
         return $this;
     }

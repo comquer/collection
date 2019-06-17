@@ -5,7 +5,7 @@ namespace Comquer\Collection;
 use Countable;
 use Iterator;
 
-abstract class IterableCollection implements Iterator, Countable
+abstract class IterableAndCountable implements Iterator, Countable
 {
     private $elements = [];
 
