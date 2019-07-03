@@ -2,7 +2,7 @@
 
 namespace Comquer\Collection;
 
-class UniqueIndex
+final class UniqueIndex
 {
     private $getIndex;
 
@@ -16,7 +16,7 @@ class UniqueIndex
         return ($this->getIndex)($element);
     }
 
-    public function validate($newElement, array $elements): void
+    public function validate($newElement, Collection $elements) : void
     {
         $index = ($this->getIndex)($newElement);
         foreach ($elements as $element) {

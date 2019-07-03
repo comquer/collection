@@ -4,8 +4,10 @@ namespace Comquer\Collection;
 
 abstract class Collection extends IterableAndCountable
 {
+    /** @var Type */
     private $type;
 
+    /** @var UniqueIndex */
     private $uniqueIndex;
 
     protected function __construct(array $elements, Type $type = null, UniqueIndex $uniqueIndex = null)
@@ -18,14 +20,14 @@ abstract class Collection extends IterableAndCountable
         }
     }
 
-    public function add($element): self
+    public function add($element) : self
     {
         if ($this->isTyped()) {
             $this->type->validate($element);
         }
 
         if ($this->hasUniqueIndex()) {
-            $this->uniqueIndex->validate($element, $this->getElements());
+            $this->uniqueIndex->validate($element, $this);
         }
 
         $this->addElement($element);
@@ -33,7 +35,7 @@ abstract class Collection extends IterableAndCountable
         return $this;
     }
 
-    public function addMany(self $elements): void
+    public function addMany(self $elements) : void
     {
         foreach ($elements as $element) {
             $this->add($element);
@@ -46,7 +48,7 @@ abstract class Collection extends IterableAndCountable
             throw UniqueIndexException::indexMissing($uniqueIndex);
         }
 
-        foreach ($this->getElements() as $element) {
+        foreach ($this as $element) {
             if (($this->uniqueIndex)($element) === $uniqueIndex) {
                 return $element;
             }
@@ -55,7 +57,7 @@ abstract class Collection extends IterableAndCountable
         throw NotFoundException::elementNotFound($uniqueIndex);
     }
 
-    public function filter(callable $filter): self
+    public function filter(callable $filter) : self
     {
         $filteredCollection = new static([]);
 
@@ -68,7 +70,7 @@ abstract class Collection extends IterableAndCountable
         return $filteredCollection;
     }
 
-    public function remove($redundantElement): self
+    public function remove($redundantElement) : self
     {
         foreach ($this->getElements() as $key => $element) {
             if ($element == $redundantElement) {
@@ -89,17 +91,17 @@ abstract class Collection extends IterableAndCountable
         }
     }
 
-    public function isTyped(): bool
+    public function isTyped() : bool
     {
         return $this->type instanceof Type;
     }
 
-    public function hasUniqueIndex(): bool
+    public function hasUniqueIndex() : bool
     {
         return $this->uniqueIndex instanceof UniqueIndex;
     }
 
-    public function isEmpty(): bool
+    public function isEmpty() : bool
     {
         return empty($this->getElements());
     }
